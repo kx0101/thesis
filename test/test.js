@@ -55,7 +55,7 @@ describe("BlockchainMusicApp", function() {
 
         // Sell some copies of the content
         await eventTicketing.setTicketPrice("My Song", 10, ethers.provider.getSigner(0).getAddress());
-        await eventTicketing.streamsPlayed("My Song", 100, ethers.provider.getSigner(0).getAddress());
+        await eventTicketing.sellTickets("My Song", 100, ethers.provider.getSigner(0).getAddress());
 
         // Check that the correct amount of royalties were paid to the artist
         await royaltyPayment.addStreams(1000, managementToken.address);
@@ -81,7 +81,7 @@ describe("BlockchainMusicApp", function() {
         assert(await managementToken.tokenExists("My Awesome Song", ethers.provider.getSigner(0).getAddress()) === true);
 
         // Sell some copies of the content
-        await eventTicketing.streamsPlayed("My Awesome Song", 100, ethers.provider.getSigner(0).getAddress());
+        await eventTicketing.sellTickets("My Awesome Song", 100, ethers.provider.getSigner(0).getAddress());
 
         // Update the artist's reputation score
         await reputationManagement.updateReputation(ethers.provider.getSigner(0).getAddress(), 10, 10, 10);

@@ -31,17 +31,17 @@ contract EventTicketing {
         ticketPrice = _price;
     }
 
-    function streamsPlayed(
-        string memory _contentName,
+    function sellTickets(
+        string memory _eventName,
         uint _numTickets,
         address _artist
     ) public payable {
         require(
-            managementToken.tokenExists(_contentName, _artist),
+            managementToken.tokenExists(_eventName, _artist),
             "EventTicketing: content does not exist"
         );
 
-        events[_contentName].ticketsSold[_artist] += _numTickets;
+        events[_eventName].ticketsSold[_artist] += _numTickets;
 
         (bool success, ) = _artist.call{value: msg.value}("");
         require(success, "EventTicketing: transfer failed");
