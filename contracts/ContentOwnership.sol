@@ -83,6 +83,11 @@ contract ContentOwnership is ERC721 {
         revert("Content not found");
     }
 
+    function getTokenId(uint contentId) public view returns (uint) {
+        require(_exists(contentId), "ERC721: token does not exist");
+        return contentId;
+    }
+
     function verifyOwnership(
         string memory contentName,
         address artistAddress

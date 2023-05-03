@@ -30,6 +30,12 @@ describe("BlockchainMusicApp", function() {
         // Register a new piece of content with the content ownership contract
         await contentOwnership.createContent("My Awesome Song", "My Awesome Lyrics", "My Awesome Album", 100);
 
+        // Get the token ID of the content
+        const tokenId = await contentOwnership.getTokenId(0);
+
+        // Verify that a valid token ID is being returned
+        assert.equal(tokenId, 0);
+
         // Verify ownership of the content
         assert(await contentOwnership.verifyOwnership("My Awesome Song", ethers.provider.getSigner(0).getAddress()) === true);
 
