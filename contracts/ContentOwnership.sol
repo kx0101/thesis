@@ -1,6 +1,8 @@
 pragma solidity ^0.8.17;
 
-contract ContentOwnership {
+import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
+
+contract ContentOwnership is ERC721 {
     struct Content {
         address payable artist;
         string title;
@@ -14,6 +16,8 @@ contract ContentOwnership {
 
     uint public nextContentId = 0;
 
+    constructor() ERC721("ContentOwnership", "CO") {}
+
     function createContent(
         string memory title,
         string memory description,
@@ -25,6 +29,8 @@ contract ContentOwnership {
         require(bytes(uri).length > 0, "URI cannot be empty");
         require(price > 0, "Price must be greater than zero");
 
+        uint tokenId = nextContentId;
+
         contents[nextContentId] = Content(
             payable(msg.sender),
             title,
@@ -34,6 +40,7 @@ contract ContentOwnership {
             false
         );
 
+        _safeMint(msg.sender, tokenId);
         nextContentId++;
     }
 
@@ -53,7 +60,12 @@ contract ContentOwnership {
             "Incorrect payment amount"
         );
 
-        contents[contentId].artist.transfer(msg.value);
+        address payable oldOwner = contents[contentId].artist;
+        address payable newOwner = payable(msg.sender);
+
+        _transfer(oldOwner, newOwner, contentId);
+
+        oldOwner.transfer(msg.value);
         contents[contentId].isForSale = false;
     }
 

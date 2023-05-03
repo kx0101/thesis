@@ -40,7 +40,7 @@ describe("BlockchainMusicApp", function() {
         assert(await managementToken.tokenExists("My Awesome Song", ethers.provider.getSigner(0).getAddress()) === true);
     });
 
-    it("should distribute royalties to artists based on content performance", async function() {
+    it("should distribute royalties to artists based on concert performance", async function() {
         // Register a new piece of content with the content ownership contract
         await contentOwnership.createContent("My Concert", "My Awesome Lyrics", "My Awesome Album", 100);
 
@@ -64,7 +64,7 @@ describe("BlockchainMusicApp", function() {
         assert.equal((await eventTicketing.getTicketSales(ethers.provider.getSigner(0).getAddress())).toNumber(), 100);
     });
 
-    it("should update an artist's reputation score based on their performance", async function() {
+    it("should update an artist's reputation score based on the performance of their streams.", async function() {
         // Register a new piece of content with the content ownership contract
         await contentOwnership.createContent("My Awesome Song", "My Awesome Lyrics", "My Awesome Album", 100);
 
