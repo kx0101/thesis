@@ -42,29 +42,26 @@ describe("BlockchainMusicApp", function() {
 
     it("should distribute royalties to artists based on content performance", async function() {
         // Register a new piece of content with the content ownership contract
-        await contentOwnership.createContent("My Song", "My Awesome Lyrics", "My Awesome Album", 100);
+        await contentOwnership.createContent("My Concert", "My Awesome Lyrics", "My Awesome Album", 100);
 
         // Verify ownership of the content
-        assert(await contentOwnership.verifyOwnership("My Song", ethers.provider.getSigner(0).getAddress()) === true);
+        assert(await contentOwnership.verifyOwnership("My Concert", ethers.provider.getSigner(0).getAddress()) === true);
 
         // Create a management token for the content
-        await managementToken.createToken("My Song", ethers.provider.getSigner(0).getAddress());
+        await managementToken.createToken("My Concert", ethers.provider.getSigner(0).getAddress());
 
         // Verify that the management token was created
-        assert(await managementToken.tokenExists("My Song", ethers.provider.getSigner(0).getAddress()) === true);
+        assert(await managementToken.tokenExists("My Concert", ethers.provider.getSigner(0).getAddress()) === true);
 
         // Sell some copies of the content
-        await eventTicketing.setTicketPrice("My Song", 10, ethers.provider.getSigner(0).getAddress());
-        await eventTicketing.sellTickets("My Song", 100, ethers.provider.getSigner(0).getAddress());
+        await eventTicketing.setTicketPrice("My Concert", 10, ethers.provider.getSigner(0).getAddress());
+        await eventTicketing.sellTickets("My Concert", 100, ethers.provider.getSigner(0).getAddress());
 
-        // Check that the correct amount of royalties were paid to the artist
-        await royaltyPayment.addStreams(1000, managementToken.address);
+        // Verify that the ticket price was set correctly
+        assert.equal((await eventTicketing.getTicketPrice()).toNumber(), 10);
 
-        const totalScore = await royaltyPayment.getRoyaltyPayment();
-        const royaltyPaymentAmountNumber = totalScore.toNumber();
-
-        // Assert that the royalty payment is equal to 100
-        assert.equal(royaltyPaymentAmountNumber, 100)
+        // Verify that the artist's ticket sales were updated correctly
+        assert.equal((await eventTicketing.getTicketSales(ethers.provider.getSigner(0).getAddress())).toNumber(), 100);
     });
 
     it("should update an artist's reputation score based on their performance", async function() {
@@ -80,8 +77,14 @@ describe("BlockchainMusicApp", function() {
         // Verify that the management token was created
         assert(await managementToken.tokenExists("My Awesome Song", ethers.provider.getSigner(0).getAddress()) === true);
 
-        // Sell some copies of the content
-        await eventTicketing.sellTickets("My Awesome Song", 100, ethers.provider.getSigner(0).getAddress());
+        // Check that the correct amount of royalties were paid to the artist
+        await royaltyPayment.addStreams(1000, managementToken.address);
+
+        const totalRoyaltyPayment = await royaltyPayment.getRoyaltyPayment();
+        const totalRoyaltyPaymentNumber = totalRoyaltyPayment.toNumber();
+
+        // Assert that the royalty payment is equal to 100
+        assert.equal(totalRoyaltyPaymentNumber, 100)
 
         // Update the artist's reputation score
         await reputationManagement.updateReputation(ethers.provider.getSigner(0).getAddress(), 10, 10, 10);

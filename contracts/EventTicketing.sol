@@ -41,6 +41,11 @@ contract EventTicketing {
             "EventTicketing: content does not exist"
         );
 
+        if (bytes(events[_eventName].name).length == 0) {
+            events[_eventName].name = _eventName;
+            eventNames.push(_eventName);
+        }
+
         events[_eventName].ticketsSold[_artist] += _numTickets;
 
         (bool success, ) = _artist.call{value: msg.value}("");
@@ -49,6 +54,7 @@ contract EventTicketing {
 
     function getTicketSales(address _artist) public view returns (uint) {
         uint totalSales;
+
         for (uint i = 0; i < eventNames.length; i++) {
             totalSales += events[eventNames[i]].ticketsSold[_artist];
         }
