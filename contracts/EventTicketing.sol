@@ -42,10 +42,6 @@ contract EventTicketing {
         );
 
         events[_contentName].ticketsSold[_artist] += _numTickets;
-        if (bytes(events[_contentName].name).length == 0) {
-            events[_contentName].name = _contentName;
-            eventNames.push(_contentName);
-        }
 
         (bool success, ) = _artist.call{value: msg.value}("");
         require(success, "EventTicketing: transfer failed");
