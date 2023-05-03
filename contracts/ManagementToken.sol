@@ -63,6 +63,7 @@ contract ManagementToken {
         uint256 amount,
         string memory contentName
     ) public {
+        require(msg.sender == recipient);
         require(getBalance(msg.sender) >= amount, "Insufficient balance.");
 
         (bool sent, ) = payable(recipient).call{value: amount}("");

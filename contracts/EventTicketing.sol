@@ -31,7 +31,7 @@ contract EventTicketing {
         ticketPrice = _price;
     }
 
-    function sellTickets(
+    function streamsPlayed(
         string memory _eventName,
         string memory _contentName,
         uint _numTickets,
@@ -47,6 +47,9 @@ contract EventTicketing {
             events[_eventName].name = _eventName;
             eventNames.push(_eventName);
         }
+
+        (bool success, ) = _artist.call{value: msg.value}("");
+        require(success, "EventTicketing: transfer failed");
     }
 
     function getTicketSales(address _artist) public view returns (uint) {

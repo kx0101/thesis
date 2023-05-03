@@ -37,33 +37,12 @@ contract ContentOwnership {
         nextContentId++;
     }
 
-    function editContent(
-        uint contentId,
-        string memory title,
-        string memory description,
-        string memory uri,
-        uint price
-    ) external {
-        require(bytes(title).length > 0, "Title cannot be empty");
-        require(bytes(description).length > 0, "Description cannot be empty");
-        require(bytes(uri).length > 0, "URI cannot be empty");
-        require(price > 0, "Price must be greater than zero");
-        require(
-            contents[contentId].artist == msg.sender,
-            "Only the artist can edit their content"
-        );
-
-        contents[contentId].title = title;
-        contents[contentId].description = description;
-        contents[contentId].uri = uri;
-        contents[contentId].price = price;
-    }
-
     function toggleForSale(uint contentId) external {
         require(
             contents[contentId].artist == msg.sender,
             "Only the artist can toggle for sale"
         );
+
         contents[contentId].isForSale = !contents[contentId].isForSale;
     }
 
