@@ -32,7 +32,6 @@ contract EventTicketing {
     }
 
     function streamsPlayed(
-        string memory _eventName,
         string memory _contentName,
         uint _numTickets,
         address _artist
@@ -42,10 +41,10 @@ contract EventTicketing {
             "EventTicketing: content does not exist"
         );
 
-        events[_eventName].ticketsSold[_artist] += _numTickets;
-        if (bytes(events[_eventName].name).length == 0) {
-            events[_eventName].name = _eventName;
-            eventNames.push(_eventName);
+        events[_contentName].ticketsSold[_artist] += _numTickets;
+        if (bytes(events[_contentName].name).length == 0) {
+            events[_contentName].name = _contentName;
+            eventNames.push(_contentName);
         }
 
         (bool success, ) = _artist.call{value: msg.value}("");
